@@ -1,30 +1,19 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 import { IconSun, IconMoon } from "@tabler/icons-react";
 
-type ThemeType = "light" | "dark";
+type ThemeSwitchType = "light" | "dark";
 
-const setBodyTheme = (theme: ThemeType) => {
+const setBodyTheme = (theme: ThemeSwitchType) => {
   document.body.classList.remove("light", "dark");
   document.body.classList.add(theme);
 };
 
-const getLocalStoragetheme = () => {
-  const theme = localStorage.getItem("theme");
-  if (theme) return theme as ThemeType;
-
-  const isDarkMatch = window.matchMedia("(prefers-color-scheme: dark)").matches;
-
-  return isDarkMatch ? "dark" : "light";
-};
-
-export const Theme = () => {
-  const storedTheme = useMemo(() => getLocalStoragetheme(), []);
-
-  const [theme, setTheme] = useState<ThemeType>(storedTheme);
+export const ThemeSwitch = () => {
+  const [theme, setTheme] = useState<ThemeSwitchType>("light");
 
   useEffect(() => {
     const handleThemeChange = ({ matches }: MediaQueryListEvent) => {
@@ -45,17 +34,30 @@ export const Theme = () => {
   }, []);
 
   useLayoutEffect(() => {
-    document.body.classList.remove("light", "dark");
-    document.body.classList.add(theme);
+    const theme = localStorage.getItem("theme");
+    if (theme) return setTheme(theme as ThemeSwitchType);
+
+    const isDarkMatch = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+
+    setTheme(isDarkMatch ? "dark" : "light");
+  }, []);
+
+  useLayoutEffect(() => {
+    setBodyTheme(theme);
   }, [theme]);
 
-  const handleClick = () =>
-    setTheme((theme) => {
-      const newTheme = theme === "light" ? "dark" : "light";
-      localStorage.setItem("theme", newTheme);
+  const handleClick = useCallback(
+    () =>
+      setTheme((theme) => {
+        const newTheme = theme === "light" ? "dark" : "light";
+        localStorage.setItem("theme", newTheme);
 
-      return newTheme;
-    });
+        return newTheme;
+      }),
+    []
+  );
 
   return (
     <motion.button
