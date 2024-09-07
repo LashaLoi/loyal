@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Unbounded } from "next/font/google";
 import "./globals.css";
 import { ThemeSwitch } from "./components/theme-switch";
 
-const inter = Inter({ subsets: ["latin"] });
+const unbounded = Unbounded({ subsets: ["cyrillic"] });
 
 export const metadata: Metadata = {
   title: "LOYAL",
@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={unbounded.className}>
         {children}
         <ThemeSwitch />
       </body>

@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+p {
+  font-family: "__Unbounded_47aefc", "__Unbounded_Fallback_47aefc";
+  font-style: normal;
+}
